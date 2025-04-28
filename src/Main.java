@@ -44,8 +44,22 @@ class Saham {
         this.harga = harga;
     }
 
+    @Override
     public String toString() {
         return kode + ": " + namaPerusahaan + " - Rp" + harga;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Saham)) return false;
+        Saham saham = (Saham) o;
+        return Objects.equals(kode, saham.kode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(kode);
     }
 }
 
@@ -64,8 +78,22 @@ class SBN {
         this.kuotaNasional = kuotaNasional;
     }
 
+    @Override
     public String toString() {
-        return nama + ", Bunga: " + bunga + "%" + ", Kuota: Rp" + kuotaNasional;
+        return nama + ", Bunga: " + bunga + "%, Kuota: Rp" + kuotaNasional;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SBN)) return false;
+        SBN sbn = (SBN) o;
+        return Objects.equals(nama, sbn.nama);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nama);
     }
 }
 
@@ -97,8 +125,13 @@ public class Main {
             System.out.print("Pilih: ");
             int pilih = sc.nextInt();
             sc.nextLine();
-            if (pilih == 1) login();
-            else break;
+            if (pilih == 1) {
+                login();
+            } else if (pilih == 2) {
+                break;
+            } else {
+                System.out.println("Pilihan tidak valid.");
+            }
         }
     }
 
@@ -108,8 +141,10 @@ public class Main {
         System.out.print("Password: ");
         String pass = sc.nextLine();
 
+        boolean found = false;
         for (User u : users) {
             if (u.authenticate(user, pass)) {
+                found = true;
                 if (u instanceof Admin) {
                     currentAdmin = (Admin) u;
                     menuAdmin();
@@ -117,10 +152,12 @@ public class Main {
                     currentCustomer = (Customer) u;
                     menuCustomer();
                 }
-                return;
+                break;
             }
         }
-        System.out.println("Login gagal.");
+        if (!found) {
+            System.out.println("Login gagal. Username atau password salah.");
+        }
     }
 
     static void menuAdmin() {
@@ -132,16 +169,15 @@ public class Main {
             System.out.print("Pilih: ");
             int pilih = sc.nextInt();
             sc.nextLine();
-            switch (pilih) {
-                case 1:
-                    menuAdminSaham();
-                    break;
-                case 2:
-                    menuAdminSBN();
-                    break;
-                case 3:
-                    currentAdmin = null;
-                    return;
+            if (pilih == 1) {
+                menuAdminSaham();
+            } else if (pilih == 2) {
+                menuAdminSBN();
+            } else if (pilih == 3) {
+                currentAdmin = null;
+                return;
+            } else {
+                System.out.println("Pilihan tidak valid.");
             }
         }
     }
@@ -163,6 +199,7 @@ public class Main {
             double harga = sc.nextDouble();
             sc.nextLine();
             daftarSaham.add(new Saham(kode, nama, harga));
+            System.out.println("Saham berhasil ditambahkan!");
         } else if (pilih == 2) {
             for (int i = 0; i < daftarSaham.size(); i++) {
                 System.out.println(i + ". " + daftarSaham.get(i));
@@ -170,15 +207,24 @@ public class Main {
             System.out.print("Pilih indeks saham: ");
             int idx = sc.nextInt();
             sc.nextLine();
-            System.out.print("Harga baru: ");
-            double hargaBaru = sc.nextDouble();
-            sc.nextLine();
-            daftarSaham.get(idx).harga = hargaBaru;
+            if (idx >= 0 && idx < daftarSaham.size()) {
+                System.out.print("Harga baru: ");
+                double hargaBaru = sc.nextDouble();
+                sc.nextLine();
+                daftarSaham.get(idx).harga = hargaBaru;
+                System.out.println("Harga saham berhasil diubah!");
+            } else {
+                System.out.println("Indeks tidak valid.");
+            }
+        } else if (pilih == 3) {
+            return;
+        } else {
+            System.out.println("Pilihan tidak valid.");
         }
     }
 
     static void menuAdminSBN() {
-        System.out.println("\n===== MANAJEMEN SBN =====");
+        System.out.println("\n===== TAMBAH SBN =====");
         System.out.print("Nama: ");
         String nama = sc.nextLine();
         System.out.print("Bunga (%): ");
@@ -193,6 +239,7 @@ public class Main {
         double kuota = sc.nextDouble();
         sc.nextLine();
         daftarSBN.add(new SBN(nama, bunga, waktu, tgl, kuota));
+        System.out.println("SBN berhasil ditambahkan!");
     }
 
     static void menuCustomer() {
@@ -207,44 +254,53 @@ public class Main {
             System.out.print("Pilih: ");
             int pilih = sc.nextInt();
             sc.nextLine();
-            switch (pilih) {
-                case 1:
-                    beliSaham();
-                    break;
-                case 2:
-                    jualSaham();
-                    break;
-                case 3:
-                    beliSBN();
-                    break;
-                case 4:
-                    simulasiSBN();
-                    break;
-                case 5:
-                    lihatPortofolio();
-                    break;
-                case 6:
-                    currentCustomer = null;
-                    return;
+            if (pilih == 1) {
+                beliSaham();
+            } else if (pilih == 2) {
+                jualSaham();
+            } else if (pilih == 3) {
+                beliSBN();
+            } else if (pilih == 4) {
+                simulasiSBN();
+            } else if (pilih == 5) {
+                lihatPortofolio();
+            } else if (pilih == 6) {
+                currentCustomer = null;
+                return;
+            } else {
+                System.out.println("Pilihan tidak valid.");
             }
         }
     }
 
     static void beliSaham() {
+        if (daftarSaham.isEmpty()) {
+            System.out.println("Belum ada saham tersedia.");
+            return;
+        }
         for (int i = 0; i < daftarSaham.size(); i++) {
             System.out.println(i + ". " + daftarSaham.get(i));
         }
         System.out.print("Pilih indeks saham: ");
         int idx = sc.nextInt();
         sc.nextLine();
-        System.out.print("Jumlah lembar: ");
-        int jumlah = sc.nextInt();
-        sc.nextLine();
-        Saham saham = daftarSaham.get(idx);
-        currentCustomer.sahamDimiliki.put(saham, currentCustomer.sahamDimiliki.getOrDefault(saham, 0) + jumlah);
+        if (idx >= 0 && idx < daftarSaham.size()) {
+            System.out.print("Jumlah lembar: ");
+            int jumlah = sc.nextInt();
+            sc.nextLine();
+            Saham saham = daftarSaham.get(idx);
+            currentCustomer.sahamDimiliki.put(saham, currentCustomer.sahamDimiliki.getOrDefault(saham, 0) + jumlah);
+            System.out.println("Saham berhasil dibeli!");
+        } else {
+            System.out.println("Indeks tidak valid.");
+        }
     }
 
     static void jualSaham() {
+        if (currentCustomer.sahamDimiliki.isEmpty()) {
+            System.out.println("Anda belum memiliki saham.");
+            return;
+        }
         int i = 0;
         List<Saham> list = new ArrayList<>(currentCustomer.sahamDimiliki.keySet());
         for (Saham s : list) {
@@ -254,39 +310,60 @@ public class Main {
         System.out.print("Pilih indeks: ");
         int idx = sc.nextInt();
         sc.nextLine();
-        Saham saham = list.get(idx);
-        System.out.print("Jumlah lembar dijual: ");
-        int jumlah = sc.nextInt();
-        sc.nextLine();
-        int dimiliki = currentCustomer.sahamDimiliki.get(saham);
-        if (jumlah > dimiliki) {
-            System.out.println("Gagal: jumlah melebihi kepemilikan.");
+        if (idx >= 0 && idx < list.size()) {
+            Saham saham = list.get(idx);
+            System.out.print("Jumlah lembar dijual: ");
+            int jumlah = sc.nextInt();
+            sc.nextLine();
+            int dimiliki = currentCustomer.sahamDimiliki.get(saham);
+            if (jumlah > dimiliki) {
+                System.out.println("Gagal: jumlah melebihi kepemilikan.");
+            } else {
+                if (jumlah == dimiliki) {
+                    currentCustomer.sahamDimiliki.remove(saham);
+                } else {
+                    currentCustomer.sahamDimiliki.put(saham, dimiliki - jumlah);
+                }
+                System.out.println("Saham berhasil dijual!");
+            }
         } else {
-            if (jumlah == dimiliki) currentCustomer.sahamDimiliki.remove(saham);
-            else currentCustomer.sahamDimiliki.put(saham, dimiliki - jumlah);
+            System.out.println("Indeks tidak valid.");
         }
     }
 
     static void beliSBN() {
+        if (daftarSBN.isEmpty()) {
+            System.out.println("Belum ada SBN tersedia.");
+            return;
+        }
         for (int i = 0; i < daftarSBN.size(); i++) {
             System.out.println(i + ". " + daftarSBN.get(i));
         }
         System.out.print("Pilih indeks SBN: ");
         int idx = sc.nextInt();
         sc.nextLine();
-        System.out.print("Nominal pembelian: ");
-        double nominal = sc.nextDouble();
-        sc.nextLine();
-        SBN sbn = daftarSBN.get(idx);
-        if (nominal > sbn.kuotaNasional) {
-            System.out.println("Kuota tidak mencukupi.");
-            return;
+        if (idx >= 0 && idx < daftarSBN.size()) {
+            System.out.print("Nominal pembelian: ");
+            double nominal = sc.nextDouble();
+            sc.nextLine();
+            SBN sbn = daftarSBN.get(idx);
+            if (nominal > sbn.kuotaNasional) {
+                System.out.println("Kuota tidak mencukupi.");
+            } else {
+                sbn.kuotaNasional -= nominal;
+                currentCustomer.sbnDimiliki.put(sbn, currentCustomer.sbnDimiliki.getOrDefault(sbn, 0.0) + nominal);
+                System.out.println("SBN berhasil dibeli!");
+            }
+        } else {
+            System.out.println("Indeks tidak valid.");
         }
-        sbn.kuotaNasional -= nominal;
-        currentCustomer.sbnDimiliki.put(sbn, currentCustomer.sbnDimiliki.getOrDefault(sbn, 0.0) + nominal);
     }
 
     static void simulasiSBN() {
+        if (currentCustomer.sbnDimiliki.isEmpty()) {
+            System.out.println("Anda belum memiliki SBN.");
+            return;
+        }
         for (Map.Entry<SBN, Double> entry : currentCustomer.sbnDimiliki.entrySet()) {
             double bungaBulanan = entry.getKey().bunga / 12 / 100 * 0.9 * entry.getValue();
             System.out.println(entry.getKey().nama + " - Rp" + bungaBulanan + "/bulan");
@@ -296,14 +373,23 @@ public class Main {
     static void lihatPortofolio() {
         System.out.println("\n===== PORTOFOLIO =====");
         System.out.println("Saham:");
-        for (Map.Entry<Saham, Integer> entry : currentCustomer.sahamDimiliki.entrySet()) {
-            double totalBeli = entry.getKey().harga * entry.getValue();
-            System.out.println(entry.getKey() + ", Jumlah: " + entry.getValue() + " lembar, Total: Rp" + totalBeli);
+        if (currentCustomer.sahamDimiliki.isEmpty()) {
+            System.out.println("Tidak ada saham.");
+        } else {
+            for (Map.Entry<Saham, Integer> entry : currentCustomer.sahamDimiliki.entrySet()) {
+                double totalBeli = entry.getKey().harga * entry.getValue();
+                System.out.println(entry.getKey() + ", Jumlah: " + entry.getValue() + " lembar, Total: Rp" + totalBeli);
+            }
         }
+
         System.out.println("\nSBN:");
-        for (Map.Entry<SBN, Double> entry : currentCustomer.sbnDimiliki.entrySet()) {
-            double bungaBulanan = entry.getKey().bunga / 12 / 100 * 0.9 * entry.getValue();
-            System.out.println(entry.getKey().nama + ", Nominal: Rp" + entry.getValue() + ", Bunga/bulan: Rp" + bungaBulanan);
+        if (currentCustomer.sbnDimiliki.isEmpty()) {
+            System.out.println("Tidak ada SBN.");
+        } else {
+            for (Map.Entry<SBN, Double> entry : currentCustomer.sbnDimiliki.entrySet()) {
+                double bungaBulanan = entry.getKey().bunga / 12 / 100 * 0.9 * entry.getValue();
+                System.out.println(entry.getKey().nama + ", Nominal: Rp" + entry.getValue() + ", Bunga/bulan: Rp" + bungaBulanan);
+            }
         }
     }
 }
