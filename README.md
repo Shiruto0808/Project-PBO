@@ -12,9 +12,7 @@ Aplikasi ini merupakan aplikasi simulasi untuk membeli dan menjual saham serta S
 
 ## Diagram UML
 
-Berikut adalah diagram UML yang menggambarkan hubungan antar kelas dalam aplikasi ini:
-
-![Diagram UML](https://app.diagrams.net/#G1EsNqU3JrVMN0-nZKqYldx8z-oNI07rPh#%7B%22pageId%22%3A%22X4EWLqRm33CRsZ2IQbLl%22%7D)
+Berikut adalah diagram UML yang menggambarkan hubungan antar kelas dalam aplikasi ini: "https://app.diagrams.net/#G1EsNqU3JrVMN0-nZKqYldx8z-oNI07rPh#%7B%22pageId%22%3A%22X4EWLqRm33CRsZ2IQbLl%22%7D"
 
 
 - **User** adalah kelas dasar yang digunakan oleh semua pengguna, dengan atribut seperti `username`, `password`, dan `role`.
