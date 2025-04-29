@@ -16,6 +16,8 @@ Berikut adalah diagram UML yang menggambarkan hubungan antar kelas dalam aplikas
 
 ![Diagram UML](https://i.imgur.com/6kXkd2O.png)
 
+- Jika anda memiliki masalah dalam membuka link nya secara langsung di github "https://i.imgur.com/6kXkd2O.png"
+
 - **User** adalah kelas dasar yang digunakan oleh semua pengguna, dengan atribut seperti `username`, `password`, dan `role`.
 - **Customer** mewarisi kelas **User** dan memiliki fitur untuk membeli saham dan SBN, serta menyimpan portofolio.
 - **Saham** dan **SuratBerhargaNegara** adalah entitas yang dapat dibeli oleh customer. Setiap saham memiliki informasi seperti kode, nama perusahaan, dan harga, sementara SBN memiliki nama, bunga, jangka waktu, dan kuota nasional.
