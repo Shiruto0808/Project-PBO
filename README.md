@@ -47,7 +47,7 @@ Untuk menjalankan aplikasi ini, pastikan Anda memiliki Java 8 atau lebih baru te
    - **Simulasi SBN**: Melihat simulasi perhitungan kupon bulanan dari investasi SBN.
    - **Portofolio**: Melihat portofolio saham dan SBN yang dimiliki.
   
-   untuk dokumentasi penggunaan dapat diakses melalui link google drive berikut : [Dokumentasi](https://drive.google.com/drive/folders/1cEFx0gZbnV5SBFmLyh1WBi-y2ESjEpoP)
+   Untuk dokumentasi penggunaan dapat diakses melalui link google drive berikut : [Dokumentasi](https://drive.google.com/drive/folders/1cEFx0gZbnV5SBFmLyh1WBi-y2ESjEpoP)
 
 ## Contributing
 
